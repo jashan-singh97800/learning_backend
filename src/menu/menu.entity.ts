@@ -1,0 +1,37 @@
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
+@Entity('menu_items')
+export class MenuItem {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  name: string;
+
+  @Column('decimal', { precision: 10, scale: 2 })
+  price: number;
+
+  @Column()
+  category: string;
+
+  @Column({ nullable: true })
+  imageUrl: string;
+
+  @Column({ default: true })
+  isAvailable: boolean;
+
+  @Column({ nullable: true })
+  description: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+}
