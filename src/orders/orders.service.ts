@@ -157,7 +157,13 @@ export class OrdersService {
   }
 
   async softDelete(id: string) {
-    const order = await this.findOne(id);
+    // Fetch without the `items` relation: Order.items has cascade: true, and
+    // TypeORM's softRemove cascades into any loaded relation with cascade
+    // enabled — but OrderItem has no @DeleteDateColumn, so cascading into it
+    // throws. Order items stay untouched; they're only ever queried through
+    // their (now soft-deleted) parent order.
+    const order = await this.orderRepo.findOne({ where: { id } });
+    if (!order) throw new NotFoundException('Order not found');
     return this.orderRepo.softRemove(order);
   }
 }
